@@ -1,4 +1,5 @@
 import axios from "axios";
+import {API_KEY, API} from '../config';
 
 export default class Search {
     constructor(query) {
@@ -6,13 +7,19 @@ export default class Search {
     }
     
     async getResults(){
-        const API_KEY = '394e7cb4d3f66b21b66fc6a1c6ff3371';
+        let response;
         try{
-            const response = await axios.get(`https://www.food2fork.com/api/search?key=${API_KEY}&q=${this.query}`);
+            response = await axios.get(`${API}/api/search?key=${API_KEY}&q=${this.query}`);
             this.result = await response.data.recipes;
-            //console.log(this.result);
+            if(response.data.error === 'limit') {
+                throw response;
+            }
         } catch (error) {
-            alert(error);
+            if(response.data.error === 'limit') {
+                console.log('API has reached limit of daily calls... :(');
+            } else{
+                console.log(`Something went wrong in getResults(): ${error}`);
+            }
         }   
         
     }
