@@ -16,16 +16,18 @@ export const highlightSelected = id => {
     resultsArr.forEach(el => {
         el.classList.remove('results__link--active');
     })
-    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+    if (document.querySelector(`.results__link[href*="#${id}"]`)) {
+        document.querySelector(`.results__link[href*="#${id}"]`).classList.add('results__link--active');
+    }
 }
 
-const limitRecipeTitle = (title, limit = 17) => {
+export const limitRecipeTitle = (title, limit = 17) => {
     const newTitle = [];
-    if(title.length > limit) {
-        title.split(' ').reduce((acc, cur, index)=>{
-            if(acc + cur.length <= limit) {
+    if (title.length > limit) {
+        title.split(' ').reduce((acc, cur, index) => {
+            if (acc + cur.length <= limit) {
                 newTitle.push(cur);
-            }else if(acc + cur.length >= limit && index === 0){
+            } else if (acc + cur.length >= limit && index === 0) {
                 newTitle.push(cur);
             }
             return acc + cur.length;
@@ -64,13 +66,13 @@ const createButton = (page, type) => `
 
 const renderButtons = (page, numResults, resPerPage) => {
 
-    const pages = Math.ceil(numResults / resPerPage);    
+    const pages = Math.ceil(numResults / resPerPage);
     let button;
 
-    if(page === 1 && pages > 1){
+    if (page === 1 && pages > 1) {
         // next page btn
         button = createButton(page, 'next');
-    } else if(page < pages) {
+    } else if (page < pages) {
         button = `
         ${createButton(page, 'next')}
         ${createButton(page, 'prev')}
